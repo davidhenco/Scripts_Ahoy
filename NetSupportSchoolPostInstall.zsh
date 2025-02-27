@@ -1,8 +1,7 @@
-#!/bin/zsh
+#!/bin/zsh --no-rcs
 
 ############
-# This script triggers headless installation of NetSupport School on MacOS.
-# It then cleans up by deleting the installation bundle and licence file. 
+# This script triggers headless installation of NetSupport School on MacOS. It then cleans up by deleting the installation bundle and licence file. 
 # It makes the asssumption that the installer and NSW.LIC licence have previously been copied to the /Users/Shared directory. 
 # You may build a custom pkg to accomplish this and include this code as a post-install script. 
 # You should also deploy the nsl.mdm.mobileconfig profile provided by NetSupport to handle the multiple TCC requirements.
