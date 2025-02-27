@@ -1,11 +1,19 @@
-#!/bin/zsh
+#!/bin/zsh --no-rcs
+
+############
+# This MacOS script silently installs a printer from an iPrint server using the iprntcmd CLI command.
+# If you wish to use a specific printer driver, you should install it before running this script.
+# In an Intune environment, we have chosen to store logs in /Library/Logs/Microsoft/IntuneScripts/InstallXeroxiPrint; modify this as required.
+# You should customize the ipp://myiprintserver.mydomain.com/ipp/Xerox-AltaLink argument with your iPrint server's URL and the printer's expected name in iPrint.
+# Be warned: This script stores and sends the iPrint username an password in plain text. This may be frowned upon from a security standpoint.
+###########
 
 # Define your iPrint username and password
-userName="1234567"
-passWord="Cegep_01"
+userName="insertusernamehere"
+passWord="insertpasswordhere"
 
 # Command to be executed
-COMMAND="/usr/local/bin/iprntcmd -a ipp://iris.cegeprdl.ca/ipp/Xerox-AltaLink"
+COMMAND="/usr/local/bin/iprntcmd -a ipp://myiprintserver.mydomain.com/ipp/Xerox-AltaLink"
 
 # Logging folder and files
 logFolder="/Library/Logs/Microsoft/IntuneScripts/InstallXeroxiPrint"
