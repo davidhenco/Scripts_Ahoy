@@ -2,7 +2,7 @@
 
 ############
 # This script creates and loads a MacOS LaunchAgent that keeps the PaperCut Client (PCCLient.app) alive at all times.
-# Since PCClient.app lives in the Applications/ folder, you may previously install it from a custom pkg or dmg.
+# Since PCClient.app lives in /Applications/, you may previously install it from a custom pkg or dmg.
 # Since the provided PCClient app is neither signed nor notarized, this script also corrects permissions and unquarantines the app. 
 # Be warned that this might be considered borderline from a security standpoint in your organization.
 ###########
