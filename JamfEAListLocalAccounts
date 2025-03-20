@@ -1,0 +1,31 @@
+#!/bin/zsh --no-rcs
+
+# Get a list of local user accounts with UIDs above 500
+# Exclude specific accounts: Management_JamF, localadmin, nobody
+
+excluded_users=("Management_JamF" "localadmin" "nobody")
+user_list=()
+
+# Loop through each user in the system
+for user in $(dscl . list /Users | grep -v '^_'); do
+    # Get the UID of the user
+    uid=$(id -u "$user")
+    
+    # Check if the UID is above 500 and the user is not in the excluded list
+    if [[ $uid -gt 500 ]] && [[ ! " ${excluded_users[@]} " =~ " ${user} " ]]; then
+        user_list+=("$user")
+    fi
+done
+
+# Join the user list into a comma-separated string
+result=$(IFS=, ; echo "${user_list[*]}")
+
+# Determine the prefix based on the number of accounts
+if [[ ${#user_list[@]} -eq 1 ]]; then
+    prefix="Only one local user account: "
+else
+    prefix="More than one local user account: "
+fi
+
+# Output the result with the appropriate prefix
+echo echo "<result>$prefix$result</result>"
