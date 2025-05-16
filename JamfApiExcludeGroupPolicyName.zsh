@@ -1,11 +1,12 @@
 #!/bin/zsh --no-rcs
 
+############
 # This script uses the Jamf Pro API to modify a list of policies, based on policy names, and scope each policy to a single exclusion group ID
 # Warning: this will overwrite all groups currently included in the exclusion scope
+############
 
 # The following URL Tools Add handy command line aliases useful for dealing with URLs
-# Taken from:
-# https://ruslanspivak.com/2010/06/02/urlencode-and-urldecode-from-a-command-line/
+# Taken from: https://ruslanspivak.com/2010/06/02/urlencode-and-urldecode-from-a-command-line/
 
 if [[ $(whence $URLTOOLS_METHOD) = "" ]]; then
     URLTOOLS_METHOD=""
