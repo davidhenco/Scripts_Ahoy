@@ -1,0 +1,47 @@
+#!/bin/zsh --no-rcs
+
+# This script displays the current conected USB storage devices SN# in Jamf Helper and copies them to the user's Clipboard.
+
+# Get serial(s) of removable USB storage devices from system_profiler
+USBSERIALZ="$(
+  system_profiler SPUSBHostDataType | awk '
+  # Capture header lines that end with ":" but ignore common attribute lines
+  /:$/ && $0 !~ /(Location ID|Connection Type|Manufacturer|Serial Number|Link Speed|USB Vendor ID|USB Product ID|USB Product Version|Power Allocated|Driver|Bus):$/ {
+    device = $0
+  }
+
+  # Track connection type
+  /Connection Type:/ {
+    # "Connection Type: Removable" -> $3 == "Removable"
+    conn = $3
+  }
+
+  # When we hit a serial number line and conditions match, print it
+  /Serial Number:/ && conn == "Removable" && device ~ /(Disk|Drive|Storage)/ {
+    serial = $0
+    sub(/^.*Serial Number:[[:space:]]*/, "", serial)
+    if (serial != "Not Provided") print serial
+  }
+  '
+)"
+
+# Fallback text if nothing was found
+[[ -z "$USBSERIALZ" ]] && USBSERIALZ="Unknown"
+
+# Display with Jamf Helper (HUD) and an OK button
+JAMF_HELPER="/Library/Application Support/JAMF/bin/jamfHelper.app/Contents/MacOS/jamfHelper"
+/usr/bin/printf '%s\n' "$USBSERIALZ"  # Optional: log the serial(s)
+
+# Use a button so return is 0 when acknowledged; avoid trailing "\" before exit
+"$JAMF_HELPER" \
+  -windowType hud \
+  -title "USB Device Identifier" \
+  -description "The Serial Number(s) of your USB storage device(s) : $USBSERIALZ
+
+I have successfully copied this information to your Clipboard. Please paste this number, in the brand/manufacturer box, in the request that is about to open." \
+  -button1 "OK" \
+  -defaultButton 1
+
+printf "%s" "$USBSERIALZ" | pbcopy
+    echo "Copied USBSERIALZ to clipboard."
+exit 0
