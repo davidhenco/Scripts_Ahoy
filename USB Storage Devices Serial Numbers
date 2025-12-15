@@ -1,47 +1,87 @@
 #!/bin/zsh --no-rcs
 
-# This script displays the current conected USB storage devices SN# in Jamf Helper and copies them to the user's Clipboard.
+# Get USB device information
+usb_output=$(system_profiler SPUSBHostDataType SPUSBDataType)
 
-# Get serial(s) of removable USB storage devices from system_profiler
-USBSERIALZ="$(
-  system_profiler SPUSBHostDataType | awk '
-  # Capture header lines that end with ":" but ignore common attribute lines
-  /:$/ && $0 !~ /(Location ID|Connection Type|Manufacturer|Serial Number|Link Speed|USB Vendor ID|USB Product ID|USB Product Version|Power Allocated|Driver|Bus):$/ {
-    device = $0
-  }
+# Initialize output
+device_list=""
 
-  # Track connection type
-  /Connection Type:/ {
-    # "Connection Type: Removable" -> $3 == "Removable"
-    conn = $3
-  }
+# Parse the output line by line
+current_device=""
+current_connection=""
+current_manufacturer=""
+current_serial=""
 
-  # When we hit a serial number line and conditions match, print it
-  /Serial Number:/ && conn == "Removable" && device ~ /(Disk|Drive|Storage)/ {
-    serial = $0
-    sub(/^.*Serial Number:[[:space:]]*/, "", serial)
-    if (serial != "Not Provided") print serial
-  }
-  '
-)"
+while IFS= read -r line; do
+    # Calculate indentation level
+    indent=$(echo "$line" | sed -n 's/^\( *\).*/\1/p' | wc -c)
+    
+    # Detect device name (line ending with colon, not a property line)
+    if [[ $line =~ ^[[:space:]]+[^:]+:[[:space:]]*$ ]] && \
+       [[ ! $line =~ (Location ID|Connection Type|Driver|Manufacturer|Serial Number|Link Speed|USB Vendor ID|USB Product ID|USB Product Version|Power Allocated): ]]; then
+        
+        # Save previous device if it was removable and not filtered
+        if [[ -n $current_device ]] && [[ $current_connection == "Removable" ]]; then
+            # Exclude devices with "Hub", "LAN", or "Video" in the name
+            if [[ ! $current_device =~ (Hub|LAN|Video) ]]; then
+                device_list+="Device: $current_device\n"
+                device_list+="Manufacturer: ${current_manufacturer:-Not Available}\n"
+                device_list+="Serial Number: ${current_serial:-Not Available}\n"
+                device_list+="\n"
+            fi
+        fi
+        
+        # Start new device
+        current_device=$(echo "$line" | sed -E 's/^[[:space:]]+(.+):[[:space:]]*$/\1/')
+        current_connection=""
+        current_manufacturer=""
+        current_serial=""
+    fi
+    
+    # Parse Connection Type
+    if [[ $line =~ Connection\ Type:[[:space:]]*(.+)$ ]]; then
+        current_connection=$(echo "${match[1]}" | xargs)
+    fi
+    
+    # Parse Manufacturer
+    if [[ $line =~ Manufacturer:[[:space:]]*(.+)$ ]]; then
+        current_manufacturer=$(echo "${match[1]}" | xargs)
+    fi
+    
+    # Parse Serial Number
+    if [[ $line =~ Serial\ Number:[[:space:]]*(.+)$ ]]; then
+        current_serial=$(echo "${match[1]}" | xargs)
+    fi
+done <<< "$usb_output"
 
-# Fallback text if nothing was found
-[[ -z "$USBSERIALZ" ]] && USBSERIALZ="Unknown"
+# Check last device
+if [[ -n $current_device ]] && [[ $current_connection == "Removable" ]]; then
+    # Exclude devices with "Hub", "LAN", or "Video" in the name
+    if [[ ! $current_device =~ (Hub|LAN|Video) ]]; then
+        device_list+="Device: $current_device\n"
+        device_list+="Manufacturer: ${current_manufacturer:-Not Available}\n"
+        device_list+="Serial Number: ${current_serial:-Not Available}\n"
+    fi
+fi
 
-# Display with Jamf Helper (HUD) and an OK button
-JAMF_HELPER="/Library/Application Support/JAMF/bin/jamfHelper.app/Contents/MacOS/jamfHelper"
-/usr/bin/printf '%s\n' "$USBSERIALZ"  # Optional: log the serial(s)
+# Remove trailing newlines
+device_list=$(echo -e "$device_list" | sed -e :a -e '/^\n*$/{$d;N;ba' -e '}')
 
-# Use a button so return is 0 when acknowledged; avoid trailing "\" before exit
-"$JAMF_HELPER" \
-  -windowType hud \
-  -title "USB Device Identifier" \
-  -description "The Serial Number(s) of your USB storage device(s) : $USBSERIALZ
+# Check if any removable devices were found
+if [[ -z $device_list ]]; then
+    device_list="No removable USB devices found."
+fi
 
-I have successfully copied this information to your Clipboard. Please paste this number, in the brand/manufacturer box, in the request that is about to open." \
-  -button1 "OK" \
-  -defaultButton 1
+# Copy to clipboard
+echo -e "$device_list" | pbcopy
+echo "$device_list" 
+echo "... copied to clipboard"
 
-printf "%s" "$USBSERIALZ" | pbcopy
-    echo "Copied USBSERIALZ to clipboard."
+# Display in osascript dialog
+osascript <<EOF
+display dialog "$device_list" & return & return & ¬
+        "This information has been successfully copied to your Clipboard. " & ¬
+        "Please paste it in the brand/manufacturer field of the request that is about to open." buttons {"OK"} default button "OK" with title "USB Removable Devices" giving up after 60
+EOF
+
 exit 0
