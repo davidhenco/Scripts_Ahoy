@@ -81,7 +81,7 @@ echo "... copied to clipboard"
 osascript <<EOF
 display dialog "$device_list" & return & return & ¬
         "This information has been successfully copied to your Clipboard. " & ¬
-        "Please paste it in the brand/manufacturer field of the request that is about to open." buttons {"OK"} default button "OK" with title "USB Removable Devices" giving up after 60
+        "Please paste it in the brand/manufacturer field of your request." buttons {"OK"} default button "OK" with title "USB Removable Devices" giving up after 60
 EOF
 
 exit 0
