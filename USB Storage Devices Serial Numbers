@@ -11,6 +11,7 @@ current_device=""
 current_connection=""
 current_manufacturer=""
 current_serial=""
+current_removable_media=""
 
 while IFS= read -r line; do
     # Calculate indentation level
@@ -21,7 +22,7 @@ while IFS= read -r line; do
        [[ ! $line =~ (Location ID|Connection Type|Driver|Manufacturer|Serial Number|Link Speed|USB Vendor ID|USB Product ID|USB Product Version|Power Allocated): ]]; then
         
         # Save previous device if it was removable and not filtered
-        if [[ -n $current_device ]] && [[ $current_connection == "Removable" ]]; then
+        if [[ -n $current_device ]] && { [[ $current_connection == "Removable" ]] || [[ $current_removable_media == "Yes" ]]; }; then
             # Exclude devices with "Hub", "LAN", or "Video" in the name
             if [[ ! $current_device =~ (Hub|HUB|LAN|Video) ]]; then
                 device_list+="Device: $current_device\n"
@@ -36,6 +37,7 @@ while IFS= read -r line; do
         current_connection=""
         current_manufacturer=""
         current_serial=""
+        current_removable_media=""
     fi
     
     # Parse Connection Type
@@ -52,10 +54,15 @@ while IFS= read -r line; do
     if [[ $line =~ Serial\ Number:[[:space:]]*(.+)$ ]]; then
         current_serial=$(echo "${match[1]}" | xargs)
     fi
+
+    # Parse Removable Media
+    if [[ $line =~ Removable\ Media:[[:space:]]*(.+)$ ]]; then
+        current_removable_media=$(echo "${match[1]}" | xargs)
+    fi
 done <<< "$usb_output"
 
 # Check last device
-if [[ -n $current_device ]] && [[ $current_connection == "Removable" ]]; then
+if [[ -n $current_device ]] && { [[ $current_connection == "Removable" ]] || [[ $current_removable_media == "Yes" ]]; }; then
     # Exclude devices with "Hub", "LAN", or "Video" in the name
     if [[ ! $current_device =~ (Hub|LAN|Video) ]]; then
         device_list+="Device: $current_device\n"
