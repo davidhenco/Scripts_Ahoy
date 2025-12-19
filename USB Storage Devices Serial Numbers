@@ -23,7 +23,7 @@ while IFS= read -r line; do
         # Save previous device if it was removable and not filtered
         if [[ -n $current_device ]] && [[ $current_connection == "Removable" ]]; then
             # Exclude devices with "Hub", "LAN", or "Video" in the name
-            if [[ ! $current_device =~ (Hub|LAN|Video) ]]; then
+            if [[ ! $current_device =~ (Hub|HUB|LAN|Video) ]]; then
                 device_list+="Device: $current_device\n"
                 device_list+="Manufacturer: ${current_manufacturer:-Not Available}\n"
                 device_list+="Serial Number: ${current_serial:-Not Available}\n"
