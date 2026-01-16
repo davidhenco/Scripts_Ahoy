@@ -1,5 +1,8 @@
 #!/bin/zsh --no-rcs
 
+# This macOS script collects information regarding connected USB Removable Storage Devices from the Apple System Profiler
+# January 2026 Amaris Consulting c/o David Cohen
+
 # Get USB device information
 usb_output=$(system_profiler SPUSBHostDataType SPUSBDataType)
 
