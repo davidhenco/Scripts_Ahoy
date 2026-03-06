@@ -89,9 +89,15 @@ echo "... copied to clipboard"
 
 # Display in osascript dialog
 osascript <<EOF
-display dialog "$device_list" & return & return & ¬
-        "This information has been successfully copied to your Clipboard. " & ¬
-        "Please paste it in the brand/manufacturer field of your request." buttons {"OK"} default button "OK" with title "USB Removable Devices" giving up after 60
+set dlg to display dialog "$device_list" & return & return & ¬
+    "All information has been successfully copied to your Clipboard. " & ¬
+    "Please paste it in the field of your support request." ¬
+    buttons {"Close", "Send Request"} default button "Send Request" ¬
+    with title "Know more about your TNAP USB Storage Device " giving up after 60
+
+if (gave up of dlg) is false and (button returned of dlg is "Send Request") then
+    open location "https://apple.com" ### REPLACE I.T. SERVICE FORM URL HERE ###
+end if
 EOF
 
 exit 0
