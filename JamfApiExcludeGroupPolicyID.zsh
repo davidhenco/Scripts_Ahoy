@@ -2,7 +2,7 @@
 
 ############
 # This script uses the Jamf Pro API to add an exclusion group to the scope of a policy
-# Warning: this will overwrite all groups currently included in the exclusion scope
+# Warning: this will overwrite all groups in the exclusion scope
 ############
 
 jssURL="https://YOURDOMAIN.jamfcloud.com"
