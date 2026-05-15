@@ -93,10 +93,10 @@ set dlg to display dialog "$device_list" & return & return & ¬
     "All information has been successfully copied to your Clipboard. " & ¬
     "Please paste it in the field of your support request." ¬
     buttons {"Close", "Send Request"} default button "Send Request" ¬
-    with title "Know more about your TNAP USB Storage Device " giving up after 60
+    with title "About your USB Storage Device " giving up after 60
 
 if (gave up of dlg) is false and (button returned of dlg is "Send Request") then
-    open location "https://apple.com" ### REPLACE I.T. SERVICE FORM URL HERE ###
+    open location "https://apple.com" ### INSERT YOUR I.T. SERVICE FORM URL WITHIN THESE QUOTES ###
 end if
 EOF
 
