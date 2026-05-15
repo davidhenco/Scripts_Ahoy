@@ -6,16 +6,15 @@
 # Get USB device information accounting for different macOS version Data Types
 usb_output=$(system_profiler SPUSBHostDataType SPUSBDataType)
 
-# Initialize output
+# Initialize outputs
 device_list=""
-
-# Parse the output line by line
 current_device=""
 current_connection=""
 current_manufacturer=""
 current_serial=""
 current_removable_media=""
 
+# Parse the output line by line
 while IFS= read -r line; do
     # Calculate indentation level
     indent=$(echo "$line" | sed -n 's/^\( *\).*/\1/p' | wc -c)
