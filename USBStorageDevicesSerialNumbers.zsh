@@ -1,6 +1,6 @@
 #!/bin/zsh --no-rcs
 
-# This macOS script collects information regarding connected USB Removable Storage Devices from the Apple System Profiler
+# This macOS script collects USB Removable Storage Devices information from the Apple System Profiler
 # January 2026 David Cohen c/o Amaris Consulting
 
 # Get USB device information
