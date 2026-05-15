@@ -1,7 +1,7 @@
 #!/bin/zsh --no-rcs
 
 ############
-# This script uses the Jamf Pro API to modify a policy based on its ID, and scope it to a single exclusion group ID
+# This script uses the Jamf Pro API to add an exclusion group to the scope of a policy
 # Warning: this will overwrite all groups currently included in the exclusion scope
 ############
 
