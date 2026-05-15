@@ -3,7 +3,7 @@
 # This macOS script collects USB Removable Storage Devices information from the Apple System Profiler
 # January 2026 David Cohen c/o Amaris Consulting
 
-# Get USB device information
+# Get USB device information accounting for different macOS version Data Types
 usb_output=$(system_profiler SPUSBHostDataType SPUSBDataType)
 
 # Initialize output
