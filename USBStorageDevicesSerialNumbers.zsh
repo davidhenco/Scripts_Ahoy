@@ -76,7 +76,7 @@ fi
 # Remove trailing newlines
 device_list=$(echo -e "$device_list" | sed -e :a -e '/^\n*$/{$d;N;ba' -e '}')
 
-# Check if any removable devices were found
+# Mitigate if no removable devices are found
 if [[ -z $device_list ]]; then
     device_list="No removable USB devices found."
 fi
