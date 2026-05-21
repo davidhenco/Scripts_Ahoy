@@ -95,7 +95,7 @@ set dlg to display dialog "$device_list" & return & return & ¬
     with title "About your USB Storage Device " giving up after 60
 
 if (gave up of dlg) is false and (button returned of dlg is "Send Request") then
-    open location "https://apple.com" ### INSERT YOUR I.T. SERVICE FORM URL WITHIN THESE QUOTES ###
+    open location "https://YOUR_IT_SERVICE.com" ### INSERT YOUR I.T. SERVICE FORM URL WITHIN THESE QUOTES ###
 end if
 EOF
 
