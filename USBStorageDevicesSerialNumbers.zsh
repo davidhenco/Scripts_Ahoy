@@ -16,8 +16,6 @@ current_removable_media=""
 
 # Parse the output line by line
 while IFS= read -r line; do
-    # Calculate indentation level
-    indent=$(echo "$line" | sed -n 's/^\( *\).*/\1/p' | wc -c)
     
     # Detect device name (line ending with colon, not a property line)
     if [[ $line =~ ^[[:space:]]+[^:]+:[[:space:]]*$ ]] && \
@@ -66,7 +64,7 @@ done <<< "$usb_output"
 # Check last device
 if [[ -n $current_device ]] && { [[ $current_connection == "Removable" ]] || [[ $current_removable_media == "Yes" ]]; }; then
     # Exclude devices with "Hub", "LAN", or "Video" in the name
-    if [[ ! $current_device =~ (Hub|LAN|Video) ]]; then
+    if [[ ! $current_device =~ (Hub|HUB|LAN|Video) ]]; then
         device_list+="Device: $current_device\n"
         device_list+="Manufacturer: ${current_manufacturer:-Not Available}\n"
         device_list+="Serial Number: ${current_serial:-Not Available}\n"
