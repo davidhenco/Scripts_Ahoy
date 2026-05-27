@@ -1,4 +1,4 @@
 # Scripts_Ahoy
-Scripts and CP's to make the life of a MacAdmin easier. 
-Leaving this here, in case someone needs it.
-You may modify these at will, a simple "Hello!" will tokenize your appreciation.
+Scripts and CP's to make the life of MacAdmins easier. 
+
+You may modify these by dropping me a "Hello".
