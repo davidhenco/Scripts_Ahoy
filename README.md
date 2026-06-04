@@ -1,5 +1,5 @@
  # Scripts_Ahoy
- ## Scripts and CP's to make the life of MacAdmins easier. 
+ ## Scripts and CP's to ease the burden of a MacAdmin. 
 If you enjoy these, drop me a line on the Macadmins' Slack *@David Cohen* .
  ### CreatePaperCutClientLaunchAgent.zsh
 This script creates and loads a MacOS LaunchAgent that keeps the PaperCut Client (PCCLient.app) alive at all times. 
