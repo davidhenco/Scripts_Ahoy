@@ -1,9 +1,8 @@
 # Scripts_Ahoy
 Scripts and CP's to make the life of MacAdmins easier. 
 
-###########
-*CreatePaperCutClientLaunchAgent.zsh
-############
+### CreatePaperCutClientLaunchAgent.zsh
+
 # This script creates and loads a MacOS LaunchAgent that keeps the PaperCut Client (PCCLient.app) alive at all times.
 # Since PCClient.app lives in /Applications/, you may previously install it from a custom pkg or dmg.
 # Since the provided PCClient app is neither signed nor notarized, this script also corrects permissions and unquarantines the app. 
